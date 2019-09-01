@@ -1,5 +1,4 @@
-*/config/auth.js
-*/config/database.js
+tmp/uploads/*
 
 # Created by https://www.gitignore.io/api/node,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=node,visualstudiocode
