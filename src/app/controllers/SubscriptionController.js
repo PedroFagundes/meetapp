@@ -3,6 +3,7 @@ import { Op } from 'sequelize';
 import Meetup from '../models/Meetup';
 import Subscription from '../models/Subscription';
 import User from '../models/User';
+import Mail from '../../libs/Mail';
 
 class SubscriptionController {
   async index(request, response) {
@@ -84,6 +85,18 @@ class SubscriptionController {
     const subscription = await Subscription.create({
       meetup_id: meetup.id,
       user_id: user.id,
+    });
+
+    // TODO: Set a Redis instance to take care of this kind of asynchronous job
+    await Mail.sendMail({
+      to: `${user.name} <${user.email}>`,
+      subject: `Novo inscrito no meetup "${meetup.title}"`,
+      template: 'subscription',
+      context: {
+        organizer: meetup.organizer.name,
+        meetup: meetup.title,
+        subscriber: user.name,
+      },
     });
 
     return response.json(subscription);
